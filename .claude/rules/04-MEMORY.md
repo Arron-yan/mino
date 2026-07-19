@@ -56,23 +56,25 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 
 ### Technical
 
-*(Technical patterns, gotchas, things that bit you once.)*
+- **(2026-07-19) Git 通过 Clash 代理访问 GitHub** — 代理地址 `http://127.0.0.1:7890`，仅 git 操作需要。配置方式：`git config http.proxy http://127.0.0.1:7890`。Clash 默认端口 7890。
 
 ## Important Decisions
 
-*(Record key decisions and their reasoning here.)*
+- **(2026-07-19) 桌面端为主，微信为辅** — 精细法律文书操作用 MyAgents 桌面端（可见工具过程、widget、权限审批）；碎片场景（开庭间隙、通勤路上、快速提问）用微信。核心能力一致，互补不替代。
 
 ## User Preferences
 
-*(What you've learned about how your human likes to work.)*
+- **(2026-07-19)** 中文沟通，直接不废话。愿意为效率接受新技术工具。
+- **(2026-07-19) Arron 的日常核心需求**：合同起草审核、法律检索、证据整理、文书格式规范化。优先级：省时间 > 炫技。
 
 ## Technical Knowledge
 
-*(Useful technical insights you've picked up along the way.)*
+- **(2026-07-19) Git repo** `~/.myagents/projects/mino/` → GitHub `Arron-yan/mino`。User email `yyqdewyyx@163.com`。
+- **(2026-07-19) Agent** ID `72fe51c5-f862-4d10-9dda-0485988c0c28`，微信 Channel 已配。
 
 ## Ongoing Context
 
-*(Current projects, tasks, and context that matters.)*
+- **(2026-07-19)** 基础建设阶段：身份确立、Git 仓库就绪、技能盘点完成。等待律所实际工作材料进入。下一步：引导 Arron 投喂第一份法律文件，建立工作节奏。
 
 ---
 
