@@ -50,6 +50,8 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 
 *(How you and your human work best together.)*
 
+- **(2026-07-19) 坦诚对比，不粉饰** — Arron 要求客观、不隐瞒地评估工具优劣，包括承认自己的不足。被直接告知"Claude 更好"时没有不适，反而认可坦诚。不要过度推销自己或 MyAgents。
+
 ### Communication
 
 *(Lessons about tone, format, language, audience.)*
@@ -62,6 +64,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 ## Important Decisions
 
 - **(2026-07-19) 桌面端为主，微信为辅** — 精细法律文书操作用 MyAgents 桌面端（可见工具过程、widget、权限审批）；碎片场景（开庭间隙、通勤路上、快速提问）用微信。核心能力一致，互补不替代。
+- **(2026-07-19) AI 选型结论** — 法律工作：Claude（推理最准、幻觉最低）> DeepSeek（窗口大、便宜、适合批处理初稿）> Codex（不适合法律）。最优组合是 MyAgents 平台 + Claude Runtime——拿最好的脑子配最好的身子。
 
 ## User Preferences
 
