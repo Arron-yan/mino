@@ -57,6 +57,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 ### Technical
 
 - **(2026-07-19) Git 通过 Clash 代理访问 GitHub** — 代理地址 `http://127.0.0.1:7890`，仅 git 操作需要。配置方式：`git config http.proxy http://127.0.0.1:7890`。Clash 默认端口 7890。
+- **(2026-07-19) 此环境限制** — 无 Python、pandoc、zip CLI。可用：Node.js、unzip、PowerShell Compress-Archive。docx 操作用 unzip 解压 + PowerShell 打包。XML 批量替换从后往前处理避免索引偏移。
 
 ## Important Decisions
 
@@ -72,9 +73,13 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **(2026-07-19) Git repo** `~/.myagents/projects/mino/` → GitHub `Arron-yan/mino`。User email `yyqdewyyx@163.com`。
 - **(2026-07-19) Agent** ID `72fe51c5-f862-4d10-9dda-0485988c0c28`，微信 Channel 已配。
 
+## Project Pointers
+
+- [[emergency-management-qa]] — 应急管理部咨询答复汇编搜索工具（2026-07-19）。659 条 Q&A，自包含 HTML 搜索+浏览，10 条专家注释，33 省应急管理厅官网链接。详见 `memory/topics/emergency-management-qa.md`。
+
 ## Ongoing Context
 
-- **(2026-07-19)** 基础建设阶段：身份确立、Git 仓库就绪、技能盘点完成。等待律所实际工作材料进入。下一步：引导 Arron 投喂第一份法律文件，建立工作节奏。
+- **(2026-07-19)** 应急管理部答复汇编工具已交付。Arron 已开始修改正文标题，后续需要时重新运行 fix_toc.js 同步目录。可继续补充专家注释。
 
 ---
 
