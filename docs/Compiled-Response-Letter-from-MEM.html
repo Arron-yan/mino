@@ -336,11 +336,10 @@ mark { background: #fff3cd; padding: 1px 2px; border-radius: 2px; color: #856404
 
 <div class="header">
   <h1>应急管理部咨询答复汇编</h1>
-  <div class="subtitle">11 章 · 653 条答复 · 全文搜索 + 逐条浏览 · 10 条注释</div>
+  <div class="subtitle">11 章 · 653 条答复 · 全文搜索 + 逐条浏览</div>
   <div class="mode-tabs">
     <button class="mode-tab active" data-mode="search">&#128269; 搜索</button>
     <button class="mode-tab" data-mode="browse">&#128218; 浏览</button>
-    <button class="mode-tab" data-mode="ai">&#129302; AI问答</button>
   </div>
 </div>
 
@@ -354,153 +353,24 @@ mark { background: #fff3cd; padding: 1px 2px; border-radius: 2px; color: #856404
     <div class="stats" id="stats"></div>
   </div>
   <div class="results" id="results">
-    <div class="no-results">
-      <div class="icon">&#128214;</div>
-      <div>输入关键词开始搜索 653 条答复</div>
-      <div style="font-size:13px;margin-top:8px">标注 <span class="local-tag-small">&#127758;</span> 的答复可查各地应急管理厅官网</div>
-    </div>
+    <div class="no-results"><div class="icon">&#128214;</div><div>输入关键词开始搜索 653 条答复</div><div style="font-size:13px;margin-top:8px">标注 <span class="local-tag-small">&#127758;</span> 的答复可查各地应急管理厅官网</div></div>
   </div>
 </div>
 
 <div id="browseMode" class="hidden">
   <div class="browse-container">
-    <div class="browse-search">
-      <input type="text" id="browseSearchInput" placeholder="浏览模式下筛选...">
-      <span class="browse-search-stats" id="browseStats"></span>
-    </div>
+    <div class="browse-search"><input type="text" id="browseSearchInput" placeholder="浏览模式下筛选..."><span class="browse-search-stats" id="browseStats"></span></div>
     <div id="browseContent"></div>
   </div>
-</div>
-
-<!-- AI Q&A MODE -->
-<div id="aiMode" class="hidden">
-  <!-- AI Q&A mode template - inserted into the main HTML -->
-<style>
-/* AI Q&A specific styles */
-.ai-container { max-width: 860px; margin: 0 auto; padding: 16px 16px 40px; }
-.ai-intro { text-align: center; padding: 32px 16px; color: #666; }
-.ai-intro .icon { font-size: 48px; margin-bottom: 12px; }
-.ai-intro h2 { font-size: 1.1em; color: #333; margin-bottom: 8px; }
-.ai-intro p { font-size: 0.9em; margin-bottom: 4px; }
-.ai-intro .examples { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-.ai-example {
-  background: white; border: 1px solid #ddd; border-radius: 20px;
-  padding: 8px 16px; font-size: 0.82em; cursor: pointer; transition: all 0.15s;
-  color: #555; white-space: nowrap;
-}
-.ai-example:hover { border-color: var(--blue); color: var(--blue); background: #f5f9fc; }
-
-.ai-input-box {
-  background: white; border-radius: 12px; padding: 12px 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08); display: flex; gap: 10px;
-  align-items: flex-end;
-}
-.ai-input-box textarea {
-  flex: 1; border: none; outline: none; font-size: 15px; resize: none;
-  min-height: 44px; max-height: 120px; font-family: inherit; background: transparent;
-  line-height: 1.5;
-}
-.ai-input-box textarea::placeholder { color: #aaa; }
-.ai-submit {
-  background: var(--blue); color: white; border: none; border-radius: 8px;
-  padding: 10px 20px; cursor: pointer; font-size: 14px; white-space: nowrap;
-  transition: background 0.15s; flex-shrink: 0;
-}
-.ai-submit:hover { background: #1a6da0; }
-.ai-submit:disabled { background: #bbb; cursor: not-allowed; }
-
-.ai-answer {
-  background: white; border-radius: 12px; padding: 20px 24px;
-  margin-top: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  line-height: 1.8; font-size: 0.92em;
-}
-.ai-answer h1, .ai-answer h2 { font-size: 1em; margin: 12px 0 6px; color: #2c3e50; }
-.ai-answer h3, .ai-answer h4 { font-size: 0.92em; margin: 10px 0 4px; }
-.ai-answer p { margin: 6px 0; }
-.ai-answer ol, .ai-answer ul { margin: 6px 0; padding-left: 20px; }
-.ai-answer li { margin: 3px 0; }
-.ai-answer strong { color: #2c3e50; }
-.ai-answer code { background: #f5f5f5; padding: 1px 6px; border-radius: 3px; font-size: 0.9em; }
-
-.ai-sources {
-  margin-top: 16px; border-top: 1px solid #eee; padding-top: 14px;
-}
-.ai-sources-title { font-size: 0.82em; font-weight: 600; color: #888; margin-bottom: 8px; }
-.ai-source-item {
-  padding: 8px 12px; background: #f8fafb; border-radius: 6px;
-  margin-bottom: 6px; font-size: 0.82em; cursor: pointer; transition: background 0.1s;
-  display: flex; gap: 10px; align-items: flex-start;
-}
-.ai-source-item:hover { background: #eef3f8; }
-.ai-source-id { color: var(--blue); font-weight: 600; white-space: nowrap; font-size: 0.85em; }
-.ai-source-text { color: #555; flex: 1; }
-.ai-source-chapter { font-size: 0.78em; color: #999; white-space: nowrap; }
-
-.ai-loading { text-align: center; padding: 32px; color: #999; }
-.ai-loading .spinner {
-  display: inline-block; width: 32px; height: 32px; border: 3px solid #e0e0e0;
-  border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.ai-error { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px 18px; color: #c0392b; font-size: 0.9em; margin-top: 12px; }
-
-.ai-status { font-size: 0.75em; color: #999; text-align: center; margin-top: 12px; }
-.ai-status.on { color: #27ae60; }
-
-.ai-answer .fallback-notice {
-  background: #fff8e1; border: 1px solid #ffecb3; border-radius: 6px;
-  padding: 10px 14px; font-size: 0.85em; color: #f57f17; margin-bottom: 14px;
-}
-
-@media (max-width: 500px) {
-  .ai-input-box { flex-direction: column; }
-  .ai-submit { width: 100%; }
-  .ai-example { font-size: 0.78em; padding: 6px 12px; }
-}
-</style>
-
-<div class="ai-container">
-  <div class="ai-intro" id="aiIntro">
-    <div class="icon">&#129302;</div>
-    <h2>AI 智能问答</h2>
-    <p>输入你的问题，AI 会从 653 条官方答复中找出最相关的内容，<br>并合成一个完整、实用的答案。</p>
-    <p style="font-size:0.78em;color:#999;margin-top:8px">例如：</p>
-    <div class="examples" id="aiExamples">
-      <span class="ai-example">食品加工小厂需要配置几名安全管理人员</span>
-      <span class="ai-example">安责险是强制购买的吗</span>
-      <span class="ai-example">有限空间作业需要什么资质</span>
-      <span class="ai-example">加油站应急预案是否需要评审</span>
-    </div>
-  </div>
-
-  <div class="ai-input-box">
-    <textarea id="aiQuestion" placeholder="输入你的问题，AI 会从 653 条答复中智能检索并合成答案..." rows="1"></textarea>
-    <button class="ai-submit" id="aiSubmit" onclick="askAIQuestion()">提问</button>
-  </div>
-
-  <div id="aiAnswer"></div>
-  <div class="ai-status" id="aiStatus">AI 服务状态检测中...</div>
-</div>
-
 </div>
 
 <button class="btn-back-top" id="btnBackTop">&#9650;</button>
 
 <div class="gov-search-panel" id="govSearchPanel">
-  <div class="gov-search-header">
-    <h3>&#127758; 各地应急管理部门查询</h3>
-    <button class="btn-close" id="btnCloseGov">&times;</button>
-  </div>
+  <div class="gov-search-header"><h3>&#127758; 各地应急管理部门查询</h3><button class="btn-close" id="btnCloseGov">&times;</button></div>
   <div class="gov-search-body">
-    <div class="gov-search-row">
-      <input type="text" id="govSearchInput" placeholder="输入关键词搜索全国 gov.cn...">
-      <button class="btn-gov-search" id="btnGovSearch">&#128269; 搜政府网站</button>
-    </div>
-    <div class="gov-links-section">
-      <div class="gov-links-title">&#127979; 各省应急管理厅（局）官网</div>
-      <div class="gov-links-grid" id="govLinksGrid"></div>
-    </div>
+    <div class="gov-search-row"><input type="text" id="govSearchInput" placeholder="输入关键词搜索全国 gov.cn..."><button class="btn-gov-search" id="btnGovSearch">&#128269; 搜政府网站</button></div>
+    <div class="gov-links-section"><div class="gov-links-title">&#127979; 各省应急管理厅（局）官网</div><div class="gov-links-grid" id="govLinksGrid"></div></div>
   </div>
 </div>
 
@@ -970,168 +840,6 @@ btnBackTop.addEventListener('click', function() {
 
 /* ===== INIT ===== */
 buildChapterFilters();
-
-/* ===== AI Q&A Logic ===== */
-var AI_API_BASE = 'http://' + window.location.hostname + ':3456';
-var aiConfigured = false;
-
-// Check AI backend status
-function checkAIStatus() {
-  var statusEl = document.getElementById('aiStatus');
-  fetch(AI_API_BASE + '/api/health')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.status === 'ok') {
-        aiConfigured = data.aiConfigured;
-        statusEl.innerHTML = data.aiConfigured
-          ? '&#128994; AI 服务已连接（' + data.model + '）'
-          : '&#128993; AI 未配置密钥，将使用智能搜索模式';
-        statusEl.className = 'ai-status' + (data.aiConfigured ? ' on' : '');
-      }
-    })
-    .catch(function() {
-      statusEl.innerHTML = '&#128308; AI 服务未启动。请运行 node server/ai-qa-server.js';
-      statusEl.className = 'ai-status';
-    });
-}
-
-// Textarea auto-resize
-var aiTextarea = document.getElementById('aiQuestion');
-aiTextarea.addEventListener('input', function() {
-  this.style.height = 'auto';
-  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-});
-aiTextarea.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    askAIQuestion();
-  }
-});
-
-// Example click
-document.querySelectorAll('.ai-example').forEach(function(el) {
-  el.addEventListener('click', function() {
-    aiTextarea.value = this.textContent;
-    aiTextarea.dispatchEvent(new Event('input'));
-    askAIQuestion();
-  });
-});
-
-// Ask AI
-function askAIQuestion() {
-  var question = aiTextarea.value.trim();
-  if (!question) return;
-
-  var answerDiv = document.getElementById('aiAnswer');
-  var introDiv = document.getElementById('aiIntro');
-  var submitBtn = document.getElementById('aiSubmit');
-
-  // Show loading
-  introDiv.style.display = 'none';
-  answerDiv.innerHTML = '<div class="ai-loading"><div class="spinner"></div><div style="margin-top:12px">正在检索 653 条答复并合成答案...</div></div>';
-  submitBtn.disabled = true;
-  submitBtn.textContent = '...';
-
-  fetch(AI_API_BASE + '/api/ask', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ question: question })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (data.error) {
-      answerDiv.innerHTML = '<div class="ai-error">' + escapeHtml(data.error) + '</div>';
-    } else {
-      renderAnswer(answerDiv, data);
-    }
-  })
-  .catch(function(e) {
-    answerDiv.innerHTML = '<div class="ai-error">无法连接 AI 服务。请确保已运行 node server/ai-qa-server.js</div>';
-  })
-  .finally(function() {
-    submitBtn.disabled = false;
-    submitBtn.textContent = '提问';
-    aiTextarea.focus();
-  });
-}
-
-function renderAnswer(container, data) {
-  var html = '';
-
-  // Mode info
-  if (data.mode === 'search-only' || data.mode === 'fallback') {
-    html += '<div class="fallback-notice">&#128161; AI 模型未配置，当前为智能搜索模式——展示最相关的 ' + (data.sources ? data.sources.length : 0) + ' 条官方答复原文。配置 DeepSeek API Key 后可获得 AI 合成的完整答案。</div>';
-  }
-
-  // Answer body (simple markdown rendering)
-  html += '<div class="ai-answer">';
-  html += renderMarkdown(data.answer);
-  html += '</div>';
-
-  // Sources
-  if (data.sources && data.sources.length > 0) {
-    html += '<div class="ai-sources">';
-    html += '<div class="ai-sources-title">&#128214; 参考来源（' + data.sources.length + ' 条）</div>';
-    data.sources.forEach(function(src) {
-      html += '<div class="ai-source-item" onclick="toggleSourceDetail(this)">';
-      html += '<span class="ai-source-id">' + escapeHtml(src.id) + '</span>';
-      html += '<div style="flex:1;min-width:0">';
-      html += '<div class="ai-source-text">' + escapeHtml(src.title) + '</div>';
-      html += '<div class="ai-source-detail" style="display:none;margin-top:6px;font-size:0.9em;color:#666;line-height:1.6">' + escapeHtml(src.reply) + '</div>';
-      html += '</div>';
-      html += '<span class="ai-source-chapter">' + escapeHtml(src.chapter) + '</span>';
-      html += '</div>';
-    });
-    html += '</div>';
-  }
-
-  container.innerHTML = html;
-}
-
-function toggleSourceDetail(el) {
-  var detail = el.querySelector('.ai-source-detail');
-  if (detail) detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
-}
-
-// Simple markdown→HTML
-function renderMarkdown(text) {
-  if (!text) return '';
-  var html = escapeHtml(text);
-
-  // Bold
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-
-  // Headers
-  html = html.replace(/^### (.+)$/gm, '<h4>$1</h4>');
-  html = html.replace(/^## (.+)$/gm, '<h3>$1</h3>');
-  html = html.replace(/^# (.+)$/gm, '<h2>$1</h2>');
-
-  // Numbered lists
-  html = html.replace(/^(\d+)\.\s+(.+)$/gm, '<li value="$1">$2</li>');
-  html = html.replace(/(<li[^>]*>[\s\S]*?<\/li>)/g, function(m) {
-    // Wrap consecutive LIs in OL
-    return m;
-  });
-
-  // Source citations [来源X]
-  html = html.replace(/\[来源(\d+)\]/g, '<code>[$1]</code>');
-
-  // Paragraphs (double newline)
-  html = html.replace(/\n\n/g, '</p><p>');
-  html = '<p>' + html + '</p>';
-
-  // Clean empty paragraphs
-  html = html.replace(/<p>\s*<\/p>/g, '');
-
-  return html;
-}
-
-function escapeHtml(text) {
-  return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-// Init
-checkAIStatus();
 
 </script>
 
