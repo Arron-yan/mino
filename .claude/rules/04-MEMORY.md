@@ -80,6 +80,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 ## Project Pointers
 
 - [[emergency-management-qa]] — 应急管理部咨询答复汇编搜索工具（2026-07-19）。659 条 Q&A，自包含 HTML 搜索+浏览，10 条专家注释，33 省应急管理厅官网链接。详见 `memory/topics/emergency-management-qa.md`。
+- [[contract-review]] — 中银（天津）律所合同审核工作（2026-08-02）。已审 IT 运维和光伏 EMC 两类合同。固定使用中银法律审核建议书格式。详见 `memory/topics/contract-review.md`。
 
 ## Ongoing Context
 
