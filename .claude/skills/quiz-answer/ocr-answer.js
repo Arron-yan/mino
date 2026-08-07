@@ -114,8 +114,11 @@ function main() {
     } else {
       hits.forEach((r, i) => {
         const m = r.matched;
-        console.log(`${i + 1}. 【答案】${m.answer}  (题库-${m.set} ${m.section} · 置信度 ${m.confidence})`);
+        console.log(`${i + 1}. 【答案】${m.answerText}  (题库-${m.set} ${m.section} · 置信度 ${m.confidence})`);
         console.log(`   题目：${m.question}`);
+        if (m.options && m.options.length) {
+          console.log(`   选项：${m.options.map((o, j) => `${String.fromCharCode(65 + j)}. ${o}`).join('  ')}`);
+        }
         console.log(`   截图原文：${r.block.slice(0, 60)}`);
       });
     }

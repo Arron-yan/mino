@@ -36,6 +36,9 @@ const template = `<!DOCTYPE html>
   .answer-pill.no { background:#dc2626; }
   .qtext { margin:12px 0 4px; font-size:15px; line-height:1.6; }
   .meta { font-size:12px; color:#6b7280; margin-top:6px; }
+  .corr { margin:10px 0 4px; font-size:16px; color:#0f766e; font-weight:700; }
+  .opts { margin:6px 0 2px; padding:8px 10px; background:#f8fafc; border-radius:8px; }
+  .opt { font-size:13px; color:#374151; line-height:1.7; }
   .conf { margin-left:8px; font-size:12px; }
   .cands { margin-top:10px; border-top:1px dashed #e5e7eb; padding-top:10px; }
   .cands .c { font-size:13px; padding:4px 0; color:#374151; }
@@ -121,6 +124,15 @@ function match(text){
   const hit = top[0].s >= 0.55;
   return { hit, top };
 }
+// 答案字母 → 对应选项内容（选项可能被打乱，靠内容核对）
+function ansText(it){
+  const ans=String(it.answer||'').trim();
+  if(!it.options||!it.options.length) return ans;
+  const letters=ans.toUpperCase().split('').filter(c=>/^[A-F]$/.test(c));
+  if(!letters.length) return ans;
+  const parts=letters.map(l=>{ const idx=l.charCodeAt(0)-65, o=it.options[idx]; return o!=null? l+'. '+o : l; });
+  return parts.join('；');
+}
 function fmtAnswer(it){
   return it.type==='judge' ? it.answer : it.answer;
 }
@@ -131,17 +143,23 @@ function render(text){
   if(!hit){
     let h='<div class="card"><span class="answer-pill no">未命中</span><div class="qtext">题库里没有匹配这道题，可能不在题库中。</div>';
     h+='<div class="cands">';
-    for(const t of top) h+='<div class="c"><b>'+t.s.toFixed(2)+'</b> · 题库-'+t.it.set+' · 答案 '+t.it.answer+' — '+t.it.question.slice(0,40)+'</div>';
+    for(const t of top) h+='<div class="c"><b>'+t.s.toFixed(2)+'</b> · 题库-'+t.it.set+' · 答案 '+ansText(t.it)+' — '+t.it.question.slice(0,40)+'</div>';
     h+='</div></div>';
     box.innerHTML=h; return;
   }
   const t=top[0];
   const label = t.it.type==='multi' ? '（多选）' : t.it.type==='judge' ? '（判断）' : '（单选）';
   let h='<div class="card"><span class="answer-pill ok">'+t.it.answer+'</span>';
+  h+='<div class="corr">对应选项：'+esc(ansText(t.it))+'</div>';
   h+='<div class="qtext">'+esc(t.it.question)+'</div>';
+  if(t.it.options && t.it.options.length){
+    h+='<div class="opts">';
+    t.it.options.forEach((o,j)=>{ h+='<div class="opt">'+String.fromCharCode(65+j)+'. '+esc(o)+'</div>'; });
+    h+='</div>';
+  }
   h+='<div class="meta">题库-'+t.it.set+' · '+t.it.section+label+' · 置信度 '+t.s.toFixed(2)+'</div>';
   h+='<div class="cands">';
-  for(const c of top.slice(1)) if(c.s>=0.4) h+='<div class="c">候选：<b>'+c.it.answer+'</b>（'+c.s.toFixed(2)+'）'+esc(c.it.question.slice(0,36))+'</div>';
+  for(const c of top.slice(1)) if(c.s>=0.4) h+='<div class="c">候选：<b>'+ansText(c.it)+'</b>（'+c.s.toFixed(2)+'）'+esc(c.it.question.slice(0,36))+'</div>';
   h+='</div></div>';
   box.innerHTML=h;
 }

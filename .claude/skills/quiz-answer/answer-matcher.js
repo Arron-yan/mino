@@ -81,6 +81,20 @@ function score(input, item) {
 // ---------- matching ----------
 const THRESHOLD = 0.55;
 
+// 答案字母 → 对应选项内容。选项可能被打乱，靠内容核对，不能只看字母。
+function answerWithOptions(it) {
+  const ans = String(it.answer || '').trim();
+  if (!it.options || !it.options.length) return ans; // 判断题无选项
+  const letters = ans.toUpperCase().split('').filter(c => /^[A-F]$/.test(c));
+  if (!letters.length) return ans;
+  const parts = letters.map(l => {
+    const idx = l.charCodeAt(0) - 65;
+    const opt = it.options[idx];
+    return opt != null ? `${l}. ${opt}` : l;
+  });
+  return parts.join('；');
+}
+
 function matchOne(text, topN) {
   const q = normalize(text);
   if (!q) return { input: text, normalized: '', hit: false, matched: null, candidates: [] };
@@ -89,7 +103,10 @@ function matchOne(text, topN) {
   const top = scored.slice(0, topN);
   const results = top.map(x => ({
     set: x.it.set, type: x.it.type, section: x.it.section,
-    question: x.it.question, answer: x.it.answer, confidence: Number(x.s.toFixed(3)),
+    question: x.it.question, answer: x.it.answer,
+    answerText: answerWithOptions(x.it),
+    options: x.it.options.slice(),
+    confidence: Number(x.s.toFixed(3)),
   }));
   const best = scored[0];
   const hit = best && best.s >= THRESHOLD;
@@ -105,12 +122,15 @@ function matchOne(text, topN) {
 function formatText(r) {
   if (r.hit) {
     const m = r.matched;
-    let out = `✅ 命中 题库-${m.set}【${m.section}】\n题目：${m.question}\n答案：${m.answer}\n置信度：${m.confidence}`;
+    let out = `✅ 命中 题库-${m.set}【${m.section}】\n题目：${m.question}\n【答案】${m.answerText}\n置信度：${m.confidence}`;
+    if (m.options && m.options.length) {
+      out += `\n选项：${m.options.map((o, i) => `${String.fromCharCode(65 + i)}. ${o}`).join('  ')}`;
+    }
     return out;
   }
   let out = `⚠️ 未命中题库（置信度 < ${THRESHOLD}）。输入：${r.input}\n最接近的候选：`;
   for (const c of r.candidates) {
-    out += `\n  [${c.confidence}] 题库-${c.set} 答案 ${c.answer} —— ${c.question.slice(0, 36)}`;
+    out += `\n  [${c.confidence}] 题库-${c.set} 答案 ${c.answerText} —— ${c.question.slice(0, 36)}`;
   }
   return out;
 }
