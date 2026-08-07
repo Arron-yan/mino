@@ -48,12 +48,18 @@ async function ocrImage(imgPath, preprocess) {
     workPath = tempPath;
   }
 
-  // cachePath/dataPath 都指向 lang/（已 gitignore），避免 tesseract 把语言包缓存写到运行目录
-  const worker = await createWorker('chi_sim', 1, { langPath: LANG_DIR, cachePath: LANG_DIR, dataPath: LANG_DIR });
-  const { data } = await worker.recognize(workPath);
-  await worker.terminate();
-  if (tempPath) { try { fs.unlinkSync(tempPath); } catch (e) {} }
-  return data.text;
+  const prevCwd = process.cwd();
+  process.chdir(LANG_DIR); // tesseract 的语言包缓存默认写到 CWD，切到 gitignore 的 lang/ 里
+  let worker = null;
+  try {
+    worker = await createWorker('chi_sim', 1, { langPath: LANG_DIR });
+    const { data } = await worker.recognize(workPath);
+    return data.text;
+  } finally {
+    if (worker) await worker.terminate().catch(() => {});
+    process.chdir(prevCwd);
+    if (tempPath) { try { fs.unlinkSync(tempPath); } catch (e) {} }
+  }
 }
 
 function splitBlocks(ocrText) {
