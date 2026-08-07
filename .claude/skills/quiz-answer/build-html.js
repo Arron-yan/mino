@@ -52,7 +52,7 @@ const template = `<!DOCTYPE html>
 <body>
 <header>
   <h1>创业知识赛 · 答题助手</h1>
-  <p>题库 ${bank.length} 题（单选/多选/判断/案例）· 本地搜索免联网 · 截图识别需联网</p>
+  <p>题库 ${bank.length} 题（单选/多选/判断/案例）· 文字搜索免联网 · 截图识别后台预载引擎，需联网</p>
 </header>
 <main>
   <div class="search-wrap">
@@ -153,36 +153,55 @@ document.getElementById('q').addEventListener('input', e=>{
   deb=setTimeout(()=>render(e.target.value), 120);
 });
 
-// ---- OCR (懒加载 CDN) ----
-let tessLoaded=false;
+// ---- OCR (后台预载 + CDN 懒加载) ----
+const LANG_URL = 'https://cdn.jsdelivr.net/npm/@tesseract.js-data/chi_sim/4.0.0_best_int';
+let tessLib = null;
 function loadTesseract(){
-  return new Promise((res,rej)=>{
-    if(window.Tesseract){ tessLoaded=true; res(); return; }
+  if (tessLib) return tessLib;
+  tessLib = new Promise((res,rej)=>{
     const s=document.createElement('script');
     s.src='https://cdn.jsdelivr.net/npm/tesseract.js@6/dist/tesseract.min.js';
-    s.onload=()=>{ tessLoaded=true; res(); };
-    s.onerror=()=>rej(new Error('CDN 加载失败（需联网）'));
+    s.onload=()=>res(window.Tesseract);
+    s.onerror=()=>rej(new Error('识别引擎加载失败（需联网）'));
     document.head.appendChild(s);
   });
+  return tessLib;
+}
+function setStatus(t){ document.getElementById('ocrStatus').textContent = t; }
+function blankCanvas(){
+  const c=document.createElement('canvas'); c.width=2; c.height=2;
+  const ctx=c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,2,2);
+  return c;
+}
+// 页面打开即后台预载引擎+语言包，首次识别时不再现场下载
+function preloadEngine(){
+  loadTesseract()
+    .then(T => {
+      setStatus('识别引擎预载中…（约几秒，可先用文字搜索）');
+      return T.recognize(blankCanvas(), 'chi_sim', { langPath: LANG_URL });
+    })
+    .then(()=>setStatus('识别引擎就绪 ✓'))
+    .catch(()=>setStatus('识别引擎预载失败：截图识别需联网，文字搜索不受影响'));
 }
 async function ocr(file){
-  const st=document.getElementById('ocrStatus');
-  st.textContent='加载识别引擎...';
-  try{ await loadTesseract(); }catch(e){ st.textContent='✗ '+e.message+'：可改用上方文字搜索。'; return; }
-  st.textContent='识别中...（中文识别约需几秒）';
+  let T;
+  try { T = await loadTesseract(); }
+  catch(e){ setStatus('✗ '+e.message+'：可改用上方文字搜索。'); return; }
+  setStatus('识别中…（约几秒）');
   try{
-    const { data } = await Tesseract.recognize(file, 'chi_sim', {
-      langPath: 'https://cdn.jsdelivr.net/npm/@tesseract.js-data/chi_sim/4.0.0_best_int',
-      logger: m=>{ if(m.status==='recognizing text') st.textContent='识别中... '+Math.round(m.progress*100)+'%'; }
+    const { data } = await T.recognize(file, 'chi_sim', {
+      langPath: LANG_URL,
+      logger: m=>{ if(m.status==='recognizing text') setStatus('识别中… '+Math.round(m.progress*100)+'%'); }
     });
-    if(!data.text.trim()){ st.textContent='未识别到文字，请换张清晰的截图。'; return; }
+    if(!data.text.trim()){ setStatus('未识别到文字，请换张清晰的截图。'); return; }
     document.getElementById('q').value = data.text;
     render(data.text);
-    st.textContent='✓ 识别完成，已自动匹配。';
+    setStatus('✓ 识别完成，已自动匹配。');
   }catch(e){
-    st.textContent='✗ 识别失败：'+e.message;
+    setStatus('✗ 识别失败：'+e.message);
   }
 }
+preloadEngine();
 const drop=document.getElementById('drop'), imgIn=document.getElementById('img');
 imgIn.addEventListener('change', e=>{ if(e.target.files[0]) ocr(e.target.files[0]); });
 ['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.add('active'); }));
