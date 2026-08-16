@@ -91,6 +91,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - [[emergency-management-qa]] — 应急管理部咨询答复汇编搜索工具（2026-07-19）。659 条 Q&A，自包含 HTML 搜索+浏览，10 条专家注释，33 省应急管理厅官网链接。详见 `memory/topics/emergency-management-qa.md`。
 - [[contract-review]] — 中银（天津）律所合同审核工作（2026-08-02）。已审 IT 运维和光伏 EMC 两类合同。固定使用中银法律审核建议书格式。详见 `memory/topics/contract-review.md`。
 - [[cross-border-employment-thesis]] — 跨境用工合规硕士论文（2026-08-03）。选题已定，前期准备阶段。资料包已建立（workspace/thesis-materials/），待补基础+检索判决书。详见 `memory/topics/cross-border-employment-thesis.md`。
+- [[quiz-answer]] — 创业研究知识赛截图查答案工具（2026-08-07）。225 题结构化题库 + 本地 OCR 匹配 + 可分享 HTML，三入口（桌面/宠物/微信）收图查答案。详见 `memory/topics/quiz-answer.md`。
 - [[chengjiu-weilai-vs-ruize]] — 成就未来诉瑞泽文化合同纠纷诉讼案（2026-08-13）。代理原告，诉请解除合同+退款24000元。策略：仲裁条款无效走诉讼 + 每日派人缺席=根本违约。起诉状已起草，待补日期。详见 `memory/topics/chengjiu-weilai-vs-ruize.md`。
 - [[wechat-marketing]] — 中银（天津）律所公众号宣传文案+卡片图（2026-08-13）。获客导向，白话问题导向留悬念写法已定模板。卡片图用 HTML+Chrome headless 生成。详见 `memory/topics/wechat-marketing.md`。
 
