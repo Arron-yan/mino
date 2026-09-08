@@ -85,6 +85,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **(2026-07-19) Agent** ID `72fe51c5-f862-4d10-9dda-0485988c0c28`，微信 Channel 已配。
 - **(2026-07-19) 学术论文检索工具链** — OpenAlex API（api.openalex.org）免费无认证，适合查期刊目录和论文元数据。Semantic Scholar API 有 rate limit（HTTP 429）。知网（CNKI）域名被安全策略拦截，Sci-Hub 语料冻结 ~2022，2023 年后中文论文需其他渠道。Wiley Online Library 全站 Cloudflare 保护，curl 无法穿透。
 - **(2026-08-13) 扫描版 PDF OCR 工具链** — 扫描件（CamScanner 等）无文本层，必须 OCR。可复用脚本 `workspace/pdf-to-text.mjs`：pdf-parse 渲染 → sharp 预处理（灰度+归一化+锐化）→ tesseract.js（chi_sim），~3秒/页、置信度 68%。用法 `node workspace/pdf-to-text.mjs <pdf> -o out.txt [--pages 1-3]`。本机无 Python/pandoc/poppler/原生 tesseract（无包管理器无管理员权限），全链路只能走 Node.js；tesseract-wasm 浏览器向、Node 下 fetch 失败，弃用。
+- **(2026-09-08) DeepSeek 余额查询链路** — Arron 说"看下余额/查余额"时运行 `node workspace/ds-balance.mjs`（读 `workspace/.deepseek-key`，key 已 gitignore，Arron 亲自填），调 `GET api.deepseek.com/user/balance`（Bearer 认证），输出含 totalBalance/currency 的 JSON，然后用 `<generative-ui-widget>` 画余额卡片（数据内联、最新卡片常驻对话）。key 与 MyAgents deepseek Provider / dsh 是同一把。详见 `workspace/ds-balance-card.md`。
 - **(2026-08-13) 中文卡片图生成** — 微信公号卡片图标准 1080×1350。本机无 Python，node-canvas 需 gyp 编译（无 Python 装不上），Jimp 不能渲染中文。可靠方案：内联 CSS 的 HTML（body 固定 1080×1350）→ Chrome headless 截图 `"/c/Program Files/Google/Chrome/Application/chrome.exe" --headless --disable-gpu --screenshot=out.png --window-size=1080,1350 --force-device-scale-factor=1 "file:///...html"`。参考图分析：Jimp 像素采样定配色布局 + tesseract.js chi_sim OCR 提文字。
 
 ## Project Pointers
