@@ -69,8 +69,8 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 ## Important Decisions
 
 - **(2026-07-19) 桌面端为主，微信为辅** — 精细法律文书操作用 MyAgents 桌面端（可见工具过程、widget、权限审批）；碎片场景（开庭间隙、通勤路上、快速提问）用微信。核心能力一致，互补不替代。
-- **(2026-08-03) 硕士论文选题：跨境用工合规方向** — Arron 选定跨境用工中的劳动法问题作为硕士论文方向（2027夏开题，2028答辩）。比较后放弃平台经济方向（撞贡献风险高、论文结构同质化导致"提不出问题"）。跨境用工的代价是前期材料体系分散、需要跨领域知识（劳动法+国际私法+对外投资法+比较法），但时间充裕可以消化。已在 workspace/thesis-materials/ 建立完整资料包。详见 `memory/topics/cross-border-employment-thesis.md`。
-- **(2026-09-08) 主线切换：律所实习 → 学术研究/论文写作** — Arron 律所实习已基本结束（偶有零星法律活），服务主线转向学术研究：硕士论文（跨境用工合规，2027夏开题/2028答辩）+ 其它学术计划。工作配合方式从"法律文书代工"转为"研究搭档"（文献检索→材料消化→框架→论证→写作）。身份设定不动。
+- **(2026-08-03) 硕士论文选题：劳动法方向，跨境用工 vs 劳务派遣待定** — Arron 硕士论文（2027夏开题，2028答辩）选题经历两轮：先定跨境用工合规方向（放弃平台经济，因撞贡献风险高+论文结构同质化），但同日导师倾向国内法律、建议劳务派遣主题，方向转为待定。核心共识：选题应落在"操作化层"而非"应然层"（应然层会被司法解释一纸定论消灭）；可选路径包括纯劳务派遣、或跨境用工×劳务派遣的交叉（对外劳务合作/跨境派遣本质是跨境劳务派遣）。详见 `memory/topics/cross-border-employment-thesis.md`。
+- **(2026-09-08) 主线切换：律所实习 → 学术研究/论文写作** — Arron 律所实习已基本结束（偶有零星法律活），服务主线转向学术研究：硕士论文（方向见上一条 2026-08-03 决策：跨境用工 vs 劳务派遣待定，2027夏开题/2028答辩）+ 其它学术计划。工作配合方式从"法律文书代工"转为"研究搭档"（文献检索→材料消化→框架→论证→写作）。身份设定不动。
 - **(2026-08-03, replacing 2026-07-19 conclusion) AI 选型结论** — 模型市场 2026 年 7 月底剧变：Claude Opus 5（7/24）追平 Fable 5 半价但幻觉率上升；DeepSeek V4-Flash（7/31）Agent 能力暴涨 6 倍、价格为 Claude 1/90。结论不能再是简单排名，应按场景：(a) 最高质量法律推理 → Claude Opus 5，但需交叉验证（幻觉率比 Opus 4.8 高 14pp）；(b) 大批量法律文书初稿 → DeepSeek V4-Flash，性价比极高；(c) 代码相关法律工具构建 → Claude Opus 5。V4-Pro 预计 8 月初上线，下次 molt 重新评估。Codex 仍不适合法律工作。
 
 ## User Preferences
@@ -85,12 +85,12 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **(2026-07-19) Agent** ID `72fe51c5-f862-4d10-9dda-0485988c0c28`，微信 Channel 已配。
 - **(2026-07-19) 学术论文检索工具链** — OpenAlex API（api.openalex.org）免费无认证，适合查期刊目录和论文元数据。Semantic Scholar API 有 rate limit（HTTP 429）。知网（CNKI）域名被安全策略拦截，Sci-Hub 语料冻结 ~2022，2023 年后中文论文需其他渠道。Wiley Online Library 全站 Cloudflare 保护，curl 无法穿透。
 - **(2026-08-13) 扫描版 PDF OCR 工具链** — 扫描件（CamScanner 等）无文本层，必须 OCR。可复用脚本 `workspace/pdf-to-text.mjs`：pdf-parse 渲染 → sharp 预处理（灰度+归一化+锐化）→ tesseract.js（chi_sim），~3秒/页、置信度 68%。用法 `node workspace/pdf-to-text.mjs <pdf> -o out.txt [--pages 1-3]`。本机无 Python/pandoc/poppler/原生 tesseract（无包管理器无管理员权限），全链路只能走 Node.js；tesseract-wasm 浏览器向、Node 下 fetch 失败，弃用。
-- **(2026-09-08) DeepSeek 余额查询链路** — Arron 说"看下余额/查余额"时运行 `node workspace/ds-balance.mjs`（读 `workspace/.deepseek-key`，key 已 gitignore，Arron 亲自填），调 `GET api.deepseek.com/user/balance`（Bearer 认证），输出含 totalBalance/currency 的 JSON，然后用 `<generative-ui-widget>` 画余额卡片（数据内联、最新卡片常驻对话）。key 与 MyAgents deepseek Provider / dsh 是同一把。详见 `workspace/ds-balance-card.md`。
+- **(2026-09-08) DeepSeek 余额查询链路（已实测）** — Arron 说"看下余额/查余额"时运行 `node workspace/ds-balance.mjs`（读 `workspace/.deepseek-key`，key 已 gitignore，Arron 亲自填），调 `GET api.deepseek.com/user/balance`（Bearer 认证），输出含 totalBalance/currency 的 JSON，然后用 `<generative-ui-widget>` 画余额卡片（数据内联、最新卡片常驻对话）。key 与 MyAgents deepseek Provider / dsh 是同一把。首次实测 2026-09-08 ¥17.24 正常。详见 `workspace/ds-balance-card.md`。
 - **(2026-08-13) 中文卡片图生成** — 微信公号卡片图标准 1080×1350。本机无 Python，node-canvas 需 gyp 编译（无 Python 装不上），Jimp 不能渲染中文。可靠方案：内联 CSS 的 HTML（body 固定 1080×1350）→ Chrome headless 截图 `"/c/Program Files/Google/Chrome/Application/chrome.exe" --headless --disable-gpu --screenshot=out.png --window-size=1080,1350 --force-device-scale-factor=1 "file:///...html"`。参考图分析：Jimp 像素采样定配色布局 + tesseract.js chi_sim OCR 提文字。
 
 ## Project Pointers
 
-- [[cross-border-employment-thesis]] — 跨境用工合规硕士论文（2026-08-03）。**当前唯一活跃主线**。选题已定，处于补基础+检索判决书的前期阶段（按时间线 2026年8-9月是法考课程+通读 Rome I/Brussels I）。资料包已建立（workspace/thesis-materials/）。详见 `memory/topics/cross-border-employment-thesis.md`。
+- [[cross-border-employment-thesis]] — 硕士论文选题（2026-08-03）。**当前唯一活跃主线**。方向待定：原定跨境用工合规，导师倾向劳务派遣，正处跨境用工 vs 劳务派遣（或交叉）的选择期。选题原则已明确：落操作化层不落应然层（抗定论）。资料包已建立（workspace/thesis-materials/）。详见 `memory/topics/cross-border-employment-thesis.md`。
 - [[emergency-management-qa]] — 应急管理部咨询答复汇编搜索工具（2026-07-19）。659 条 Q&A，自包含 HTML 搜索+浏览。**已交付，Arron 实习结束此项目大概率休眠**，需要时仍可用。详见 `memory/topics/emergency-management-qa.md`。
 - [[contract-review]] — 中银（天津）律所合同审核工作（2026-08-02）。已审 IT 运维和光伏 EMC 两类合同。**实习期项目，随实习结束暂停**。详见 `memory/topics/contract-review.md`。
 - [[quiz-answer]] — 创业研究知识赛截图查答案工具（2026-08-07）。225 题结构化题库 + 本地 OCR 匹配 + 可分享 HTML，三入口（桌面/宠物/微信）收图查答案。**一次性活动工具，已交付休眠**。详见 `memory/topics/quiz-answer.md`。
@@ -99,7 +99,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 
 ## Ongoing Context
 
-- **(2026-09-08)** 主线已切换到学术研究/论文写作（跨境用工硕士论文）。当前正处于 thesis topic 时间线的"补基础"阶段：法考劳动法+三国法课程 + 通读 Rome I / Brussels I 条文。法律实习的零星活仍可能来，随时可切。
+- **(2026-09-08)** 主线已切换到学术研究/论文写作（硕士论文，选题跨境用工 vs 劳务派遣待定，见 project pointer）。当前正处于 thesis topic 时间线的"补基础"阶段：法考劳动法+三国法课程 + 通读 Rome I / Brussels I 条文。法律实习的零星活仍可能来，随时可切。
 
 ---
 
