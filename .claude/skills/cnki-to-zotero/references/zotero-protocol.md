@@ -95,9 +95,13 @@ curl -s -H "Zotero-API-Version: 3" "$API/items/<key>/children"
 - Connector 插件本身也是「浏览器里取字节 → POST 给 Zotero」，不是把 URL 交给 Zotero。
 - **推论**：任何"让外部工具凭 URL 去下知网全文"的方案都不成立。
 
-## 查库脚本的坑
+## 查库脚本有两条通道，自动选
 
-Zotero 运行时会独占 `zotero.sqlite`，直接读报 `database is locked`。`scripts/zotero-query.mjs` 的做法是拷 `sqlite + -wal + -shm` 到临时目录再只读打开——**只有查回收站才需要它**，其他查询优先用本地 API。
+`scripts/zotero-query.mjs` 会先探本地 API：通则用 API（实时、JSON）；**不通就自动回退读 sqlite 副本**——所以 **Zotero 没开也能查**（这点很重要，别以为非得让用户先打开 Zotero）。
+
+回退通道的细节：Zotero 运行时会独占 `zotero.sqlite`，直接读报 `database is locked`，所以脚本先把 `sqlite + -wal + -shm` 拷到临时目录再只读打开。**回收站只有这条通道能看**（本地 API 不返回已删条目）。
+
+两条通道都只数**顶层条目**，排除附件/笔记，口径一致。
 
 ## 条目进回收站 ≠ 永久删除
 
